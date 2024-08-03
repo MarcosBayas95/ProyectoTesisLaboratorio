@@ -23,7 +23,7 @@ router.post('/', verificaToken, auditoriaMiddleware((req) => `Creó Médico con 
 
   try {
     const [existingUserRows] = await (await Conexion).execute(
-      'SELECT * FROM Medico WHERE cedula = ?',
+      'SELECT * FROM medico WHERE cedula = ?',
       [cedula]
     );
 
@@ -32,7 +32,7 @@ router.post('/', verificaToken, auditoriaMiddleware((req) => `Creó Médico con 
     }
 
     await (await Conexion).execute(
-      'INSERT INTO Medico (cedula, nombre_apellido, celular, direccion, id_especialidad) VALUES (?, ?, ?, ?, ?)',
+      'INSERT INTO medico (cedula, nombre_apellido, celular, direccion, id_especialidad) VALUES (?, ?, ?, ?, ?)',
       [cedula, nombre_apellido, celular, direccion, id_especialidad]
     );
 
@@ -49,7 +49,7 @@ router.put('/:cedula', verificaToken, auditoriaMiddleware((req) => `Editó Médi
   const { nombre_apellido, id_especialidad, celular, direccion } = req.body;
   try {
     const [existingMedicoRows] = await (await Conexion).execute(
-      'SELECT * FROM Medico WHERE cedula = ?',
+      'SELECT * FROM medico WHERE cedula = ?',
       [medicoCedula]
     );
 
@@ -58,7 +58,7 @@ router.put('/:cedula', verificaToken, auditoriaMiddleware((req) => `Editó Médi
     }
 
     await (await Conexion).execute(
-      'UPDATE Medico SET nombre_apellido = ?, celular = ?, direccion = ? , id_especialidad = ? WHERE cedula = ?',
+      'UPDATE medico SET nombre_apellido = ?, celular = ?, direccion = ? , id_especialidad = ? WHERE cedula = ?',
       [nombre_apellido, celular, direccion, id_especialidad, medicoCedula]
     );
 
@@ -78,7 +78,7 @@ router.delete('/:cedula', verificaToken, async (req, res) => {
 
   try {
     const [existingMedicoRows] = await (await Conexion).execute(
-      'SELECT * FROM Medico WHERE cedula = ?',
+      'SELECT * FROM medico WHERE cedula = ?',
       [medicoCedula]
     );
 
@@ -86,7 +86,7 @@ router.delete('/:cedula', verificaToken, async (req, res) => {
       return res.status(404).json({ error: 'Médico no encontrado.' });
     }
 
-    await (await Conexion).execute('DELETE FROM Medico WHERE cedula = ?', [medicoCedula]);
+    await (await Conexion).execute('DELETE FROM medico WHERE cedula = ?', [medicoCedula]);
 
     await registrarAuditoria(usuario_nombre, ip_usuario, accion);
 
@@ -101,7 +101,7 @@ router.delete('/:cedula', verificaToken, async (req, res) => {
 router.get('/:id', verificaToken, async (req, res) => {
   const medicoId = req.params.id; 
   try {
-    const [rows] = await (await Conexion).execute('SELECT cedula, nombre_apellido FROM Medico WHERE cedula = ?', [medicoId]);
+    const [rows] = await (await Conexion).execute('SELECT cedula, nombre_apellido FROM medico WHERE cedula = ?', [medicoId]);
 
     if (rows.length === 1) {
       res.json({ success: true, cedula: rows[0].cedula, nombre_apellido: rows[0].nombre_apellido, message: 'Médico encontrado correctamente.' });

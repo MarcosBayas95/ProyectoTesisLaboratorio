@@ -9,7 +9,7 @@ const getClientIp = require('request-ip').getClientIp;
 router.get('/', verificaToken, async (req, res) => {
     try {
       const [rows] = await (await Conexion).execute(
-        'SELECT * FROM Especialidad'
+        'SELECT * FROM especialidad'
       );
 
       res.json({ especialidades: rows });
@@ -45,7 +45,7 @@ router.post('/', verificaToken, async (req, res) => {
     try {
    
       await (await Conexion).execute(
-        'UPDATE Especialidad SET nombre = ?  WHERE id_especialidad = ?',
+        'UPDATE especialidad SET nombre = ?  WHERE id_especialidad = ?',
         [nombre, especialidadId]
       );
   
@@ -66,7 +66,7 @@ router.delete('/:id', verificaToken, async (req, res) => {
   try {
 
     const [[especialidadAnalisis]] = await (await Conexion).execute(
-      'SELECT COUNT(*) AS count FROM  Especialidad e  INNER JOIN Analisis a on a.id_especialidad=e.id_especialidad WHERE e.id_especialidad = ?',
+      'SELECT COUNT(*) AS count FROM  especialidad e  INNER JOIN analisis a on a.id_especialidad=e.id_especialidad WHERE e.id_especialidad = ?',
       [especialidadId]
     );
 
@@ -75,7 +75,7 @@ router.delete('/:id', verificaToken, async (req, res) => {
     }
 
     const [[especialidadWithMedico]] = await (await Conexion).execute(
-      'SELECT COUNT(*) AS count FROM Medico m INNER JOIN Especialidad e ON m.id_especialidad = e.id_especialidad INNER JOIN Analisis a on a.id_especialidad=e.id_especialidad WHERE e.id_especialidad = ?',
+      'SELECT COUNT(*) AS count FROM medico m INNER JOIN especialidad e ON m.id_especialidad = e.id_especialidad INNER JOIN analisis a on a.id_especialidad=e.id_especialidad WHERE e.id_especialidad = ?',
       [especialidadId]
     );
 
